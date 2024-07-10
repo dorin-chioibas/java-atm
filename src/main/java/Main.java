@@ -1,7 +1,11 @@
 package src.main.java;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-    }
+import java.util.Scanner;  // Import the Scanner class
+
+class Main {
+	public static void main(String[] args) {
+		new Application();
+	}
+
+
 }
