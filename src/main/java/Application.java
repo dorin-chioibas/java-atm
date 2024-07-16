@@ -8,15 +8,17 @@ public class Application {
 	private Scanner scan = new Scanner(System.in);
 	
 	public Application() {
-		StartMenuRunning();
+		startmenuRunning();
 	}
 	
-	public void StartMenuRunning() {
+	public void startmenuRunning() {
 		while(!this.exit) {
-			Display.Menu();
-			String name = scan.nextLine();
-			ATMaccount account = atm.getAccountUser(name);
-			if(account != null) runningAccount(account);
+			Display.menu();
+			var name = scan.nextLine();
+			var account = atm.getAccountUser(name);
+			if(account != null) {
+				runningAccount(account);
+			}
 		}
 		scan.close();
 		System.out.println("End Of the Session");
@@ -31,7 +33,7 @@ public class Application {
 		}
 		System.out.println("End Of the Session of " + account.getUser().getName());
 		scan.nextLine();
-		StartMenuRunning();
+		startmenuRunning();
 
 	}
 	
@@ -43,27 +45,27 @@ public class Application {
 		switch(choice) {
 		case 1:
 			System.out.println("Balance of the account");
-			System.out.println(atm.CheckBalance());
+			System.out.println(atm.checkBalance());
 			break;
 		case 2:
 			System.out.println("Give money to deposit");
 			float moneyToDeposit = scan.nextFloat();
-			atm.DepositMoney(moneyToDeposit);
+			atm.depositMoney(moneyToDeposit);
 			System.out.println("Balance of the account");
-			System.out.println(atm.CheckBalance());
+			System.out.println(atm.checkBalance());
 			break;
 		case 3:
 			System.out.println("Give money to deposit");
 			float moneyToDraw = scan.nextFloat();
-			atm.WithdrawMoney(moneyToDraw);
+			atm.withdrawMoney(moneyToDraw);
 			System.out.println("Balance of the account");
-			System.out.println(atm.CheckBalance());
+			System.out.println(atm.checkBalance());
 			break;
 		case 4:
 			atm.close();
 			break;
 		default:
-			ErrorHandling.InvalidOption();
+			ErrorHandling.invalidOption();
 		}
 		
 	}
@@ -71,18 +73,18 @@ public class Application {
 		System.out.println("Do you want to make an account(0/1)");
 		int choice = scan.nextInt();
 		scan.nextLine(); // Consume the newline left-over
-		if(choice == 0) {
+		if (choice == 0) {
 			return null;
 		}
-		else if(choice == 1) {
-			User user = new User(name);
+
+		if (choice == 1) {
+			var user = new User(name);
 			account.addAccount(user.getAccount(), name);
 			return user.getAccount();
 		}
-		else {
-			ErrorHandling.InvalidOption();
-			return null;
-		}
+
+		ErrorHandling.invalidOption();
+		return null;
 		
 	}
 }

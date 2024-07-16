@@ -13,17 +13,17 @@ public class ATMaccount {
 		return user;
 	}
 	
-	public float CheckBalance() {
+	public float checkBalance() {
 		return balance;
 	}
 	
-	public void DepositMoney(float money) {
+	public void depositMoney(float money) {
 		balance += money;
 	}
 	
-	public void WithdrawMoney(float amount) {
+	public void withdrawMoney(float amount) {
 		if(amount > balance ) {
-				ErrorHandling.InsufficientFunds();
+				ErrorHandling.insufficientFunds();
 				return;
 		}
 		balance -= amount;

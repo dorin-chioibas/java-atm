@@ -11,7 +11,7 @@ public class ATM {
 	}
 	public ATMaccount getAccountUser(String name) {
 		if(!accounts.containsKey(name)) {
-			ATMaccount account = app.makeAccount(name,this);
+			var account = app.makeAccount(name,this);
 			return account;
 		}
 		accounts.get(name).open();

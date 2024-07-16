@@ -2,7 +2,7 @@ package src.main.java;
 
 public class Display {
 
-	public static void Menu() {
+	public static void menu() {
 		System.out.println("Welcome ! What is your account's name ?");
 	}
 	
