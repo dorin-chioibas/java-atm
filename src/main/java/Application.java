@@ -3,37 +3,66 @@ package src.main.java;
 import java.util.Scanner;
 
 public class Application {
-	private ATM atm = new ATM(this);
+	private ATM atm = new ATM();
 	private boolean exit = false;
 	private Scanner scan = new Scanner(System.in);
 	
 	public Application() {
-		startmenuRunning();
+		startMenuRunning();
 	}
 	
-	public void startmenuRunning() {
+	public void startMenuRunning() {
 		while(!this.exit) {
 			Display.menu();
 			var name = scan.nextLine();
-			var account = atm.getAccountUser(name);
+			if(name.equals("e")){
+				exit();	
+				break;		
+			}
+			var account = this.accountSearch(name);
 			if(account != null) {
-				runningAccount(account);
+				runningAccount(account);	
 			}
 		}
 		scan.close();
-		System.out.println("End Of the Session");
+		Display.endOfSession();
 	}
 	
+	
+	private ATMaccount accountSearch(String name) {
+		if(atm.hasAccount(name)) {
+			var account = atm.getAccountUser(name);
+			account.open();
+			return account;
+		}
+		return makeAccount(name);
+	}
+	
+	/**
+	 * creates a new account
+	 */
+	private ATMaccount makeAccount(String name) {
+		Display.makeAccount();
+		int choice = intScan();
+		if (choice == 0) {
+			return null;
+		}
+		if (choice == 1) {
+			return atm.makeAccount(name);
+		}
+		ErrorHandling.invalidOption();
+		return null;
+	}
+	
+	
 	public void runningAccount(ATMaccount account) {
-		System.out.println("Welcome " + account.getUser().getName());
+		Display.welcome(account.getUser().getName());
 		while(!account.isClosed()) {
 			Display.accountMenu(account);
-			int choice = scan.nextInt();
-			atmWork(account, choice);
+			atmWork(account, intScan());
 		}
-		System.out.println("End Of the Session of " + account.getUser().getName());
-		scan.nextLine();
-		startmenuRunning();
+		Display.endOfSession(account.getUser().getName());
+		startMenuRunning();
 
 	}
 	
@@ -41,50 +70,42 @@ public class Application {
 		this.exit= true;
 	}
 	
-	private void atmWork(ATMaccount atm,int choice) {
+	private void atmWork(ATMaccount account,int choice) {
 		switch(choice) {
 		case 1:
-			System.out.println("Balance of the account");
-			System.out.println(atm.checkBalance());
+			Display.balance(account.checkBalance());
 			break;
 		case 2:
-			System.out.println("Give money to deposit");
-			float moneyToDeposit = scan.nextFloat();
-			atm.depositMoney(moneyToDeposit);
-			System.out.println("Balance of the account");
-			System.out.println(atm.checkBalance());
+			account.depositMoney(giveMoney());
+			Display.balance(account.checkBalance());
 			break;
 		case 3:
-			System.out.println("Give money to deposit");
-			float moneyToDraw = scan.nextFloat();
-			atm.withdrawMoney(moneyToDraw);
-			System.out.println("Balance of the account");
-			System.out.println(atm.checkBalance());
+			account.withdrawMoney(giveMoney());
+			Display.balance(account.checkBalance());
 			break;
 		case 4:
-			atm.close();
+			account.close();
 			break;
 		default:
 			ErrorHandling.invalidOption();
 		}
 		
 	}
-	public ATMaccount makeAccount(String name,ATM account) {
-		System.out.println("Do you want to make an account(0/1)");
-		int choice = scan.nextInt();
-		scan.nextLine(); // Consume the newline left-over
-		if (choice == 0) {
-			return null;
-		}
-
-		if (choice == 1) {
-			var user = new User(name);
-			account.addAccount(user.getAccount(), name);
-			return user.getAccount();
-		}
-
-		ErrorHandling.invalidOption();
-		return null;
-		
+	
+	private float giveMoney() {
+		Display.giveMoney();
+		return floatScan();
 	}
+	
+	private int intScan() {
+		int integer =  scan.nextInt();
+		scan.nextLine(); 
+		return integer;
+	}
+	private float floatScan() {
+		float moneyToDeposit = scan.nextFloat();
+		scan.nextLine();
+		return moneyToDeposit;
+	}
+
 }
